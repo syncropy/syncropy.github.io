@@ -2,19 +2,40 @@
 
 class UniverseSimulation {
     constructor(canvasElement) {
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.renderer = new THREE.WebGLRenderer({ 
-            canvas: canvasElement,
-            antialias: true 
-        });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        
-        this.setupScene();
-        this.setupMenu();
+        console.log('UniverseSimulation constructor called');
+        console.log('Canvas Element:', canvasElement);
+        console.log('menu_tji:', menu_tji);
+
+        if (!canvasElement) {
+            console.error('No canvas element found!');
+            return;
+        }
+
+        if (typeof THREE === 'undefined') {
+            console.error('Three.js not loaded!');
+            return;
+        }
+
+        try {
+            this.scene = new THREE.Scene();
+            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.renderer = new THREE.WebGLRenderer({ 
+                canvas: canvasElement,
+                antialias: true 
+            });
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setClearColor(0x000000);  // Explicitly set background to black
+            
+            console.log('Renderer setup complete');
+            this.setupScene();
+            this.setupMenu();
+        } catch (error) {
+            console.error('Error in UniverseSimulation constructor:', error);
+        }
     }
 
     setupScene() {
+        console.log('Setting up scene');
         // Initial cosmic configuration
         this.camera.position.z = 5;
 
@@ -47,40 +68,65 @@ class UniverseSimulation {
     }
 
     setupMenu() {
+        console.log('Setting up menu');
         const menuContainer = document.getElementById('cosmic-menu');
 
-        // Render courses from menu_tji
-        Object.entries(menu_tji)
-            .filter(([,v]) => v[1].includes('type:course'))
-            .forEach(([,courseData]) => {
-                const courseId = courseData[0].split(':')[1];
-                const courseName = courseData[1].split('name:')[1];
-                
-                // Find associated details
-                const ingredients = Object.values(menu_tji)
-                    .find(i => i[1].includes(`parent:${courseId}`) && i[1].includes('type:ingredients'));
-                const technique = Object.values(menu_tji)
-                    .find(i => i[1].includes(`parent:${courseId}`) && i[1].includes('type:preparation'));
-                const narrative = Object.values(menu_tji)
-                    .find(i => i[1].includes(`parent:${courseId}`) && i[1].includes('type:narrative'));
+        if (!menuContainer) {
+            console.error('No menu container found!');
+            return;
+        }
 
-                // Create course section
-                const courseSection = document.createElement('div');
-                courseSection.className = 'course-section';
-                courseSection.dataset.courseId = courseId;
+        // Helper function to safely extract data
+        const extractData = (data, key) => {
+            if (!data) return '';
+            const found = data.find(item => item[1].includes(key));
+            return found ? found[1].split(`${key}:`)[1].trim() : '';
+        };
 
-                // Populate course details
-                courseSection.innerHTML = `
-                    <div class="course-details">
-                        <h2>${courseName.replace(/([A-Z])/g, ' $1').trim()}</h2>
-                        ${ingredients ? `<p>Ingredients: ${ingredients[1].split('items:')[1]}</p>` : ''}
-                        ${technique ? `<p>Technique: ${technique[1].split('method:')[1]}</p>` : ''}
-                        ${narrative ? `<p class="narrative">${narrative[1].split('content:')[1]}</p>` : ''}
-                    </div>
-                `;
+        // Collect all items by type and parent
+        const itemsByType = Object.entries(menu_tji).reduce((acc, [key, value]) => {
+            const typeMatch = value[1].match(/type:(\w+)/);
+            const parentMatch = value[1].match(/parent:(\w+)/);
+            if (typeMatch) {
+                const type = typeMatch[1];
+                const parent = parentMatch ? parentMatch[1] : null;
+                if (!acc[type]) acc[type] = {};
+                acc[type][key] = { data: value, parent };
+            }
+            return acc;
+        }, {});
 
-                menuContainer.appendChild(courseSection);
-            });
+        // Process courses
+        const courses = Object.entries(itemsByType.course || {});
+        console.log(`Found ${courses.length} courses`);
+
+        courses.forEach(([courseKey, courseItem]) => {
+            // Find associated items for this course
+            const courseName = extractData([courseItem.data], 'name');
+            const ingredients = Object.values(itemsByType.ingredients || {})
+                .find(item => item.parent === courseKey);
+            const technique = Object.values(itemsByType.preparation || {})
+                .find(item => item.parent === courseKey);
+            const narrative = Object.values(itemsByType.narrative || {})
+                .find(item => item.parent === courseKey);
+
+            // Create course section
+            const courseSection = document.createElement('div');
+            courseSection.className = 'course-section';
+            courseSection.dataset.courseId = courseKey;
+
+            // Populate course details
+            courseSection.innerHTML = `
+                <div class="course-details">
+                    <h2>${courseName.replace(/([A-Z])/g, ' $1').trim()}</h2>
+                    ${ingredients ? `<p>Ingredients: ${extractData([ingredients.data], 'items')}</p>` : ''}
+                    ${technique ? `<p>Technique: ${extractData([technique.data], 'method')}</p>` : ''}
+                    ${narrative ? `<p class="narrative">${extractData([narrative.data], 'content')}</p>` : ''}
+                </div>
+            `;
+
+            menuContainer.appendChild(courseSection);
+        });
 
         this.setupScrollInteraction();
     }
@@ -157,5 +203,24 @@ class UniverseSimulation {
 
 // Initialize Universe Simulation on page load
 document.addEventListener('DOMContentLoaded', () => {
-    const universeSimulation = new UniverseSimulation(document.getElementById('universe-canvas'));
+    console.log('DOMContentLoaded fired');
+    const canvasElement = document.getElementById('universe-canvas');
+    
+    if (canvasElement) {
+        console.log('Canvas element found, initializing simulation');
+        const universeSimulation = new UniverseSimulation(canvasElement);
+    } else {
+        console.error('No canvas element found with ID universe-canvas');
+    }
+});
+
+// Fallback initialization in case DOMContentLoaded doesn't fire
+window.addEventListener('load', () => {
+    console.log('Window load event fired');
+    const canvasElement = document.getElementById('universe-canvas');
+    
+    if (canvasElement) {
+        console.log('Canvas element found via window load, initializing simulation');
+        const universeSimulation = new UniverseSimulation(canvasElement);
+    }
 });
