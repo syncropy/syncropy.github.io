@@ -93,5 +93,3 @@ const menu_tji = {
   "17": ["id:C3Narrative","type:narrative","parent:Course3","content:4 billion years ago, deep in earth's ocean, a volcanic vent spewed molten carbon into the water in its vicinity, vaporizing some before reacting with the hydrogen and oxygen, and trace molecules of dissolved ammonia to form the first organic compounds."],
   "18": ["id:C3Physics","type:physics","parent:Course3","config:{ particleDensity:500, energy:1e6, temperature:1e4, expansion:0.5, chaos:0.3 }"]
 };
-
-export default menu_tji;
