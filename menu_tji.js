@@ -1,76 +1,7 @@
 // menu_tji.js
-const menu_tji = {
+var menu_tji = {
   // Core Architecture
   "1": ["id:Menu","type:architecture","name:SyncropyDevelopmentMenu","chef:Mobley"],
-  
-  // HTML Templates
-  "2": ["id:Templates","type:markup","parent:Menu","name:HTMLStructures",
-    "content:`
-      <main class='content'>
-        <section class='section' data-course='Course1'>
-          <div class='menu-card'>
-            <h1>The Nothingness Before Existence</h1>
-            <div class='ingredients'></div>
-            <div class='narrative'></div>
-            <div class='technique'></div>
-          </div>
-        </section>
-        <section class='section' data-course='Course2'>
-          <div class='menu-card'>
-            <h1>The Big Bang</h1>
-            <div class='ingredients'></div>
-            <div class='narrative'></div>
-            <div class='technique'></div>
-          </div>
-        </section>
-        <section class='section' data-course='Course3'>
-          <div class='menu-card'>
-            <h1>Primordial Soup</h1>
-            <div class='ingredients'></div>
-            <div class='narrative'></div>
-            <div class='technique'></div>
-          </div>
-        </section>
-      </main>
-      <canvas class='canvas'></canvas>
-    `"],
-  
-  "3": ["id:Styles","type:markup","parent:Menu","name:CSSStyles",
-    "content:`
-      *{margin:0;padding:0;box-sizing:border-box}
-      body{overflow-x:hidden;background:#000;color:#fff;font-family:system-ui}
-      .canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
-      .content{position:relative;z-index:1}
-      .section{min-height:100vh;display:grid;place-items:center;padding:2rem;position:relative}
-      .menu-card{
-        background:rgba(0,0,0,.85);
-        padding:2rem;
-        border-radius:1rem;
-        max-width:800px;
-        opacity:0;
-        transform:translateY(50px);
-        transition:all 1s ease-out;
-      }
-      .menu-card.visible{
-        opacity:1;
-        transform:translateY(0);
-      }
-      .ingredients{
-        font-family:monospace;
-        color:#aaa;
-        margin:1rem 0;
-      }
-      .narrative{
-        font-style:italic;
-        line-height:1.6;
-        margin:1rem 0;
-      }
-      .technique{
-        color:#888;
-        font-size:0.9em;
-        margin-top:1rem;
-      }
-    `"],
   
   // Course 1: The Nothingness
   "4": ["id:Course1","type:course","parent:Menu","name:TheNothingnessBeforeExistence"],
