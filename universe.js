@@ -4,7 +4,7 @@ class UniverseSimulation {
     constructor(canvasElement) {
         console.log('UniverseSimulation constructor called');
         console.log('Canvas Element:', canvasElement);
-        console.log('menu_tji:', menu_tji);
+        console.log('menu_tji full data:', JSON.stringify(menu_tji));
 
         if (!canvasElement) {
             console.error('No canvas element found!');
@@ -76,39 +76,51 @@ class UniverseSimulation {
             return;
         }
 
-        // Helper function to safely extract data
-        const extractData = (data, key) => {
-            if (!data) return '';
-            const found = data.find(item => item[1].includes(key));
-            return found ? found[1].split(`${key}:`)[1].trim() : '';
+        // Safe extraction function
+        const extractValue = (str, key) => {
+            if (!str) return '';
+            const match = str.match(new RegExp(`${key}:([^,]*)`));
+            return match ? match[1].trim() : '';
         };
 
-        // Collect all items by type and parent
-        const itemsByType = Object.entries(menu_tji).reduce((acc, [key, value]) => {
-            const typeMatch = value[1].match(/type:(\w+)/);
-            const parentMatch = value[1].match(/parent:(\w+)/);
-            if (typeMatch) {
-                const type = typeMatch[1];
-                const parent = parentMatch ? parentMatch[1] : null;
-                if (!acc[type]) acc[type] = {};
-                acc[type][key] = { data: value, parent };
-            }
-            return acc;
-        }, {});
+        // Find all course entries
+        const courseEntries = Object.entries(menu_tji)
+            .filter(([, value]) => 
+                value && value[1] && value[1].includes('type:course')
+            );
 
-        // Process courses
-        const courses = Object.entries(itemsByType.course || {});
-        console.log(`Found ${courses.length} courses`);
+        console.log('Course entries found:', courseEntries.length);
 
-        courses.forEach(([courseKey, courseItem]) => {
-            // Find associated items for this course
-            const courseName = extractData([courseItem.data], 'name');
-            const ingredients = Object.values(itemsByType.ingredients || {})
-                .find(item => item.parent === courseKey);
-            const technique = Object.values(itemsByType.preparation || {})
-                .find(item => item.parent === courseKey);
-            const narrative = Object.values(itemsByType.narrative || {})
-                .find(item => item.parent === courseKey);
+        courseEntries.forEach(([courseKey, courseData]) => {
+            console.log('Processing course:', courseKey, courseData);
+
+            // Find associated data for this course
+            const courseName = extractValue(courseData[1], 'name');
+            
+            // Find ingredients, technique, and narrative for this course
+            const ingredientsEntry = Object.entries(menu_tji).find(
+                ([, value]) => value[1].includes(`parent:${courseKey}`) && 
+                               value[1].includes('type:ingredients')
+            );
+            const techniqueEntry = Object.entries(menu_tji).find(
+                ([, value]) => value[1].includes(`parent:${courseKey}`) && 
+                               value[1].includes('type:preparation')
+            );
+            const narrativeEntry = Object.entries(menu_tji).find(
+                ([, value]) => value[1].includes(`parent:${courseKey}`) && 
+                               value[1].includes('type:narrative')
+            );
+
+            // Safely extract values
+            const ingredients = ingredientsEntry 
+                ? extractValue(ingredientsEntry[1], 'items') 
+                : 'No ingredients listed';
+            const technique = techniqueEntry 
+                ? extractValue(techniqueEntry[1], 'method') 
+                : 'No technique specified';
+            const narrative = narrativeEntry 
+                ? extractValue(narrativeEntry[1], 'content') 
+                : 'No narrative provided';
 
             // Create course section
             const courseSection = document.createElement('div');
@@ -118,10 +130,10 @@ class UniverseSimulation {
             // Populate course details
             courseSection.innerHTML = `
                 <div class="course-details">
-                    <h2>${courseName.replace(/([A-Z])/g, ' $1').trim()}</h2>
-                    ${ingredients ? `<p>Ingredients: ${extractData([ingredients.data], 'items')}</p>` : ''}
-                    ${technique ? `<p>Technique: ${extractData([technique.data], 'method')}</p>` : ''}
-                    ${narrative ? `<p class="narrative">${extractData([narrative.data], 'content')}</p>` : ''}
+                    <h2>${courseName ? courseName.replace(/([A-Z])/g, ' $1').trim() : 'Unnamed Course'}</h2>
+                    <p>Ingredients: ${ingredients}</p>
+                    <p>Technique: ${technique}</p>
+                    <p class="narrative">${narrative}</p>
                 </div>
             `;
 
