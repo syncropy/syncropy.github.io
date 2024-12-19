@@ -1,72 +1,23 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Syncropy Menu</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-body { background:#000; color:#fff; font-family:system-ui; margin:0; padding:20px; }
-.course { margin-bottom:40px; }
-.ingredients { color:#aaa; font-family:monospace; }
-.narrative { font-style:italic; }
-#debug { position:fixed; bottom:0; left:0; background:rgba(0,0,0,0.8); color:#0f0; padding:10px; font-family:monospace; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syncropy Cosmic Tasting Menu</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    
+    <!-- Project Scripts -->
+    <script src="https://syncropy.github.io/menu_tji.js"></script>
+    <script src="https://syncropy.github.io/universe.js" defer></script>
 </head>
 <body>
-<div id="debug">Waiting for script...</div>
-<div id="menu"></div>
-
-<script src="https://syncropy.github.io/menu_tji.js"></script>
-<script>
-function log(msg) {
-    console.log(msg);
-    document.getElementById('debug').innerHTML += '<br>' + msg;
-}
-
-window.onload = () => {
-    log('Window loaded');
-    log('menu_tji is: ' + (typeof menu_tji));
-    
-    if (!menu_tji) {
-        log('menu_tji not loaded!');
-        return;
-    }
-
-    log('Found ' + Object.keys(menu_tji).length + ' menu items');
-    
-    const courses = Object.entries(menu_tji)
-        .filter(([,v]) => {
-            log('Checking entry: ' + v);
-            return v[1].includes('type:course');
-        })
-        .map(([,v]) => {
-            try {
-                const courseId = v[0].split(':')[1];
-                log('Processing course: ' + courseId);
-                
-                const name = v[1].split('name:')[1] || '';
-                const ingredients = Object.values(menu_tji)
-                    .find(i => i[1].includes(`parent:${courseId}`) && 
-                              i[1].includes('type:ingredients'));
-                const narrative = Object.values(menu_tji)
-                    .find(i => i[1].includes(`parent:${courseId}`) && 
-                              i[1].includes('type:narrative'));
-                
-                return `
-                    <div class="course">
-                        <h2>${name.replace(/([A-Z])/g, ' $1').trim()}</h2>
-                        ${ingredients ? `<div class="ingredients">${ingredients[1].split('items:')[1]}</div>` : ''}
-                        ${narrative ? `<div class="narrative">${narrative[1].split('content:')[1]}</div>` : ''}
-                    </div>
-                `;
-            } catch (e) {
-                log('Error processing course: ' + e.message);
-                return '';
-            }
-        }).join('');
-    
-    log('Generated HTML length: ' + courses.length);
-    document.getElementById('menu').innerHTML = courses;
-};
-</script>
+    <canvas id="universe-canvas"></canvas>
+    <div id="cosmic-menu"></div>
 </body>
 </html>
