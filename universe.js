@@ -77,16 +77,18 @@ class UniverseSimulation {
         }
 
         // Safe extraction function
-        const extractValue = (str, key) => {
-            if (!str) return '';
-            const match = str.match(new RegExp(`${key}:([^,]*)`));
-            return match ? match[1].trim() : '';
+        const extractValue = (dataArray, key) => {
+            if (!dataArray || !Array.isArray(dataArray)) return '';
+            const itemString = dataArray.find(item => item.includes(`${key}:`));
+            if (!itemString) return '';
+            return itemString.split(`${key}:`)[1].split(',')[0].trim();
         };
 
         // Find all course entries
         const courseEntries = Object.entries(menu_tji)
             .filter(([, value]) => 
-                value && value[1] && value[1].includes('type:course')
+                value && Array.isArray(value) && 
+                value.some(item => item.includes('type:course'))
             );
 
         console.log('Course entries found:', courseEntries.length);
@@ -95,20 +97,26 @@ class UniverseSimulation {
             console.log('Processing course:', courseKey, courseData);
 
             // Find associated data for this course
-            const courseName = extractValue(courseData[1], 'name');
+            const courseName = extractValue(courseData, 'name');
             
             // Find ingredients, technique, and narrative for this course
             const ingredientsEntry = Object.entries(menu_tji).find(
-                ([, value]) => value[1].includes(`parent:${courseKey}`) && 
-                               value[1].includes('type:ingredients')
+                ([, value]) => value.some(item => 
+                    item.includes(`parent:${courseKey}`) && 
+                    item.includes('type:ingredients')
+                )
             );
             const techniqueEntry = Object.entries(menu_tji).find(
-                ([, value]) => value[1].includes(`parent:${courseKey}`) && 
-                               value[1].includes('type:preparation')
+                ([, value]) => value.some(item => 
+                    item.includes(`parent:${courseKey}`) && 
+                    item.includes('type:preparation')
+                )
             );
             const narrativeEntry = Object.entries(menu_tji).find(
-                ([, value]) => value[1].includes(`parent:${courseKey}`) && 
-                               value[1].includes('type:narrative')
+                ([, value]) => value.some(item => 
+                    item.includes(`parent:${courseKey}`) && 
+                    item.includes('type:narrative')
+                )
             );
 
             // Safely extract values
@@ -116,7 +124,7 @@ class UniverseSimulation {
                 ? extractValue(ingredientsEntry[1], 'items') 
                 : 'No ingredients listed';
             const technique = techniqueEntry 
-                ? extractValue(techniqueEntry[1], 'method') 
+                ? extractValue(techniqueEntry[1], 'method') || extractValue(techniqueEntry[1], 'steps')
                 : 'No technique specified';
             const narrative = narrativeEntry 
                 ? extractValue(narrativeEntry[1], 'content') 
@@ -165,17 +173,22 @@ class UniverseSimulation {
                     const courseId = section.dataset.courseId;
                     const physicsConfig = Object.values(menu_tji)
                         .find(i => 
-                            i[1].includes(`parent:${courseId}`) && 
-                            i[1].includes('type:physics')
+                            i.some(item => 
+                                item.includes(`parent:${courseId}`) && 
+                                item.includes('type:physics')
+                            )
                         );
 
                     if (physicsConfig) {
-                        // Parse physics config
-                        const configStr = physicsConfig[1].split('config:')[1].trim();
-                        const parsedConfig = eval('(' + configStr + ')');
+                        // Find and parse physics config
+                        const configItem = physicsConfig.find(item => item.includes('config:'));
+                        if (configItem) {
+                            const configStr = configItem.split('config:')[1].trim();
+                            const parsedConfig = eval('(' + configStr + ')');
 
-                        // Update universe simulation
-                        this.updateSimulation(parsedConfig);
+                            // Update universe simulation
+                            this.updateSimulation(parsedConfig);
+                        }
                     }
                 } else {
                     section.classList.remove('active');
