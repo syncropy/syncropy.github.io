@@ -1,92 +1,48 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Syncropy</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script></head><body><script>((d,w)=>{
-fetch('https://syncropy.github.io/menu_tji.js').then(r=>r.text()).then(t=>{
-const m=eval(`(${t.split('export default ')[0]})`);
-const π=Math.PI,τ=π*2,ε=1e-6,v3=(x=0,y=0,z=0)=>new THREE.Vector3(x,y,z);
+<!DOCTYPE html><html>
+<head>
+<title>Syncropy Menu</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body { background:#000; color:#fff; font-family:system-ui; margin:0; padding:20px; }
+.course { margin-bottom:40px; }
+.ingredients { color:#aaa; font-family:monospace; }
+.narrative { font-style:italic; }
+</style>
+</head>
+<body>
+<div id="menu"></div>
 
-// Init styles & structure
-const s=d.createElement('style');
-s.textContent=m[3][1].split('content:`')[1].slice(0,-2)+`
-.hero{height:100vh;display:grid;place-items:center;text-align:center;background:rgba(0,0,0,.7)}
-.hero-content{max-width:800px;padding:2rem}
-.btn-group{display:flex;gap:1rem;justify-content:center;margin-top:2rem}
-.btn{background:#fff;color:#000;border:0;padding:.8rem 2rem;cursor:pointer;transition:all .3s;text-transform:uppercase;letter-spacing:1px}
-.btn:hover{background:#333;color:#fff}`;
-d.head.appendChild(s);
-
-// Add hero and menu structure
-d.body.innerHTML=`<div class="hero">
-<div class="hero-content">
-<h1>Syncropy</h1>
-<p>Experience the Universe Through Taste</p>
-<div class="btn-group">
-<button class="btn" onclick="register('cook')">Cook</button>
-<button class="btn" onclick="register('host')">Host</button>
-<button class="btn" onclick="register('dine')">Dine</button>
-</div>
-</div>
-</div>`+m[2][1].split('content:`')[1].slice(0,-2);
-
-// Physics & rendering
-const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,1e3);
-const renderer=new THREE.WebGLRenderer({canvas:d.querySelector('.canvas'),antialias:!0});
-renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(innerWidth,innerHeight);
-camera.position.z=5;
-
-// Particle system
-const geo=new THREE.BufferGeometry(),particleCount=1e4;
-const positions=new Float32Array(particleCount*3);
-const velocities=new Float32Array(particleCount*3);
-for(let i=0;i<particleCount*3;i+=3){
-positions[i]=positions[i+1]=positions[i+2]=0;
-velocities[i]=(Math.random()-.5)*.1;
-velocities[i+1]=(Math.random()-.5)*.1;
-velocities[i+2]=(Math.random()-.5)*.1;
-}
-geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
-const material=new THREE.PointsMaterial({size:.02,transparent:!0,blending:THREE.AdditiveBlending});
-const particles=new THREE.Points(geo,material);
-scene.add(particles);
-
-// Animation loop
-const animate=()=>{
-requestAnimationFrame(animate);
-const positions=particles.geometry.attributes.position.array;
-for(let i=0;i<positions.length;i+=3){
-positions[i]+=velocities[i];
-positions[i+1]+=velocities[i+1];
-positions[i+2]+=velocities[i+2];
-}
-particles.geometry.attributes.position.needsUpdate=!0;
-renderer.render(scene,camera);
+<script src="https://syncropy.github.io/menu_tji.js"></script>
+<script>
+window.onload = () => {
+    const menu = document.getElementById('menu');
+    
+    const courses = Object.entries(menu_tji)
+        .filter(([,v]) => v[1].includes('type:course'))
+        .map(([,v]) => {
+            const courseId = v[0].split(':')[1];
+            const name = v[1].split('name:')[1];
+            
+            const ingredients = Object.values(menu_tji)
+                .find(i => i[1].includes(`parent:${courseId}`) && 
+                          i[1].includes('type:ingredients'));
+                          
+            const narrative = Object.values(menu_tji)
+                .find(i => i[1].includes(`parent:${courseId}`) && 
+                          i[1].includes('type:narrative'));
+            
+            return `
+                <div class="course">
+                    <h2>${name.replace(/([A-Z])/g, ' $1').trim()}</h2>
+                    <div class="ingredients">${ingredients[1].split('items:')[1]}</div>
+                    <div class="narrative">${narrative[1].split('content:')[1]}</div>
+                </div>
+            `;
+        }).join('');
+        
+    menu.innerHTML = courses;
 };
-
-// Scroll handlers
-gsap.registerPlugin(ScrollTrigger);
-d.querySelectorAll('.section').forEach(section=>{
-const card=section.querySelector('.menu-card');
-ScrollTrigger.create({
-trigger:section,
-start:'top center',
-end:'bottom center',
-onEnter:()=>card.classList.add('visible'),
-onLeave:()=>card.classList.remove('visible'),
-onEnterBack:()=>card.classList.add('visible'),
-onLeaveBack:()=>card.classList.remove('visible')
-});
-});
-
-// User registration
-w.register=type=>{
-localStorage.setItem('userType',type);
-const section=d.querySelector(`[data-course="Course1"]`);
-section.scrollIntoView({behavior:'smooth'});
-};
-
-animate();
-addEventListener('resize',()=>{
-camera.aspect=innerWidth/innerHeight;
-camera.updateProjectionMatrix();
-renderer.setSize(innerWidth,innerHeight);
-});
-});})(document,window);</script></body></html>
+</script>
+</body>
+</html>
