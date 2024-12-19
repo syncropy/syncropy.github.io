@@ -4,7 +4,7 @@ class UniverseSimulation {
     constructor(canvasElement) {
         console.log('UniverseSimulation constructor called');
         console.log('Canvas Element:', canvasElement);
-        console.log('menu_tji full data:', JSON.stringify(menu_tji));
+        console.log('menu_tji full data:', menu_tji);
 
         if (!canvasElement) {
             console.error('No canvas element found!');
@@ -76,77 +76,26 @@ class UniverseSimulation {
             return;
         }
 
-        // Safe extraction function
-        const extractValue = (dataArray, key) => {
-            if (!dataArray || !Array.isArray(dataArray)) return '';
-            const itemString = dataArray.find(item => item.includes(`${key}:`));
-            if (!itemString) return '';
-            return itemString.split(`${key}:`)[1].split(',')[0].trim();
-        };
+        // Render courses from menu_tji
+        Object.values(menu_tji)
+            .filter(item => item.type === 'course')
+            .forEach(course => {
+                const courseSection = document.createElement('div');
+                courseSection.className = 'course-section';
+                courseSection.dataset.courseId = course.id;
 
-        // Find all course entries
-        const courseEntries = Object.entries(menu_tji)
-            .filter(([, value]) => 
-                value && Array.isArray(value) && 
-                value.some(item => item.includes('type:course'))
-            );
+                courseSection.innerHTML = `
+                    <div class="course-details">
+                        <h2>${course.name ? course.name.replace(/([A-Z])/g, ' $1').trim() : 'Unnamed Course'}</h2>
+                        ${course.items ? `<p>Ingredients: ${course.items}</p>` : ''}
+                        ${course.method ? `<p>Technique: ${course.method}</p>` : ''}
+                        ${course.steps ? `<p>Technique: ${course.steps}</p>` : ''}
+                        ${course.content ? `<p class="narrative">${course.content}</p>` : ''}
+                    </div>
+                `;
 
-        console.log('Course entries found:', courseEntries.length);
-
-        courseEntries.forEach(([courseKey, courseData]) => {
-            console.log('Processing course:', courseKey, courseData);
-
-            // Find associated data for this course
-            const courseName = extractValue(courseData, 'name');
-            
-            // Find ingredients, technique, and narrative for this course
-            const ingredientsEntry = Object.entries(menu_tji).find(
-                ([, value]) => value.some(item => 
-                    item.includes(`parent:${courseKey}`) && 
-                    item.includes('type:ingredients')
-                )
-            );
-            const techniqueEntry = Object.entries(menu_tji).find(
-                ([, value]) => value.some(item => 
-                    item.includes(`parent:${courseKey}`) && 
-                    item.includes('type:preparation')
-                )
-            );
-            const narrativeEntry = Object.entries(menu_tji).find(
-                ([, value]) => value.some(item => 
-                    item.includes(`parent:${courseKey}`) && 
-                    item.includes('type:narrative')
-                )
-            );
-
-            // Safely extract values
-            const ingredients = ingredientsEntry 
-                ? extractValue(ingredientsEntry[1], 'items') 
-                : 'No ingredients listed';
-            const technique = techniqueEntry 
-                ? extractValue(techniqueEntry[1], 'method') || extractValue(techniqueEntry[1], 'steps')
-                : 'No technique specified';
-            const narrative = narrativeEntry 
-                ? extractValue(narrativeEntry[1], 'content') 
-                : 'No narrative provided';
-
-            // Create course section
-            const courseSection = document.createElement('div');
-            courseSection.className = 'course-section';
-            courseSection.dataset.courseId = courseKey;
-
-            // Populate course details
-            courseSection.innerHTML = `
-                <div class="course-details">
-                    <h2>${courseName ? courseName.replace(/([A-Z])/g, ' $1').trim() : 'Unnamed Course'}</h2>
-                    <p>Ingredients: ${ingredients}</p>
-                    <p>Technique: ${technique}</p>
-                    <p class="narrative">${narrative}</p>
-                </div>
-            `;
-
-            menuContainer.appendChild(courseSection);
-        });
+                menuContainer.appendChild(courseSection);
+            });
 
         this.setupScrollInteraction();
     }
@@ -172,23 +121,11 @@ class UniverseSimulation {
                     // Find corresponding physics config
                     const courseId = section.dataset.courseId;
                     const physicsConfig = Object.values(menu_tji)
-                        .find(i => 
-                            i.some(item => 
-                                item.includes(`parent:${courseId}`) && 
-                                item.includes('type:physics')
-                            )
-                        );
+                        .find(item => item.id === courseId && item.type === 'physics');
 
                     if (physicsConfig) {
-                        // Find and parse physics config
-                        const configItem = physicsConfig.find(item => item.includes('config:'));
-                        if (configItem) {
-                            const configStr = configItem.split('config:')[1].trim();
-                            const parsedConfig = eval('(' + configStr + ')');
-
-                            // Update universe simulation
-                            this.updateSimulation(parsedConfig);
-                        }
+                        // Update universe simulation
+                        this.updateSimulation(physicsConfig.config);
                     }
                 } else {
                     section.classList.remove('active');
