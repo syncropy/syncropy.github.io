@@ -8,8 +8,11 @@
   // Scene setup
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 10;
+
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
+  console.log("Appending renderer to container:", container);
   container.appendChild(renderer.domElement);
 
   // Particle system
@@ -26,7 +29,7 @@
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
   const particleMaterial = new THREE.PointsMaterial({
-    size: 0.03,
+    size: 1.0, // Temporarily increase size for debugging
     color: 0xffffff,
     transparent: true,
     opacity: 0.8,
@@ -34,6 +37,10 @@
 
   const particles = new THREE.Points(particleGeometry, particleMaterial);
   scene.add(particles);
+
+  // Debugging helper
+  const axesHelper = new THREE.AxesHelper(5);
+  scene.add(axesHelper);
 
   // Animation loop
   function animate() {
@@ -44,6 +51,7 @@
     for (let i = 0; i < posArray.length; i++) {
       posArray[i] += velocities[i] * 0.5; // Move particles outward
     }
+    console.log("First particle position:", posArray[0], posArray[1], posArray[2]);
     particleGeometry.attributes.position.needsUpdate = true;
 
     renderer.render(scene, camera);
