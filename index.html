@@ -1,383 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Syncropy Cosmic Tasting Menu</title>
-  
-  <!-- Styles -->
-  <style>
-    /* Global Reset and Base Styles */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: monospace;
-      background: black;
-      color: white;
-      overflow-x: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNCTROPY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra
 
-    /* Universe Canvas Styling */
-    #universe-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
++Petch:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://conseroinc.github.io/conseroinc.css">
+    <script 
 
-    /* Cosmic Menu Container */
-    #cosmic-menu {
-      position: relative;
-      z-index: 10;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* Course Section Styling */
-    .course-section {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      opacity: 0.7;
-      transition: opacity 0.5s ease;
-    }
-
-    .course-section.active {
-      opacity: 1;
-    }
-
-    /* Course Details Container */
-    .course-details {
-      background: rgba(0,0,0,0.7);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 500px;
-      margin: 20px;
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-      #cosmic-menu {
-        max-width: 90%;
-        padding: 10px;
-      }
-
-      .course-details {
-        max-width: 100%;
-        margin: 10px;
-      }
-    }
-
-    /* Typography Enhancements */
-    .course-details h2 {
-      font-size: 2rem;
-      margin-bottom: 15px;
-      text-transform: capitalize;
-    }
-
-    .course-details p {
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
-
-    .course-details .narrative {
-      font-style: italic;
-      color: #cccccc;
-    }
-
-    /* Scrollbar Styling */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.7);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-  </style>
-  
-  <!-- External Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-  <canvas id="universe-canvas"></canvas>
-  <div id="cosmic-menu"></div>
+    <div id="three-container"></div>
 
-  <script>
-    const menu_tji = {
-      "architecture": {
-        id: "architecture",
-        type: "architecture",
-        name: "SyncropyDevelopmentMenu",
-        chef: "Mobley"
-      },
-      "course1": {
-        id: "course1",
-        type: "course",
-        parent: "architecture",
-        name: "TheNothingnessBeforeExistence",
-        items: "Honey,CacaoBeans,Butter",
-        method: "RoastedTableside",
-        content: "Consider… nothing. Not the absence of light, for there was no light. Not the absence of space, for there was no space to be absent from. Not even the absence of time, for time itself had not yet begun. Before the universe, before existence as we understand it, there was… nothing. Not emptiness. Not void. *Nothing*"
-      },
-      "course2": {
-        id: "course2",
-        type: "course",
-        parent: "architecture",
-        name: "TheBigBang",
-        items: "VanillaBeanPods,SweetCream,LiquidNitrogen,WhiteChocolate,FruitGels",
-        steps: "OpenPods,ScrapeBeans,ToastWithPod,AddCream,Simmer,RemovePod,PourPools,FreezeLN2",
-        content: "And then… a rupture. Not an explosion *in* space, but an explosion *of* space itself. From an infinitesimal point, the very fabric of space and time erupted forth."
-      },
-      "course3": {
-        id: "course3",
-        type: "course",
-        parent: "architecture",
-        name: "PrimordialSoup",
-        items: "VegetableAsh,DashiStock",
-        steps: "MortarPestleAsh,Distribute,DecantStock",
-        content: "4 billion years ago, deep in earth's ocean, a volcanic vent spewed molten carbon into the water in its vicinity, vaporizing some before reacting with the hydrogen and oxygen, and trace molecules of dissolved ammonia to form the first organic compounds."
-      },
-      "physics1": {
-        id: "physics1",
-        type: "physics",
-        parent: "course1",
-        config: {
-          particleDensity: 0,
-          energy: 0,
-          temperature: 0,
-          expansion: 0,
-          chaos: 0
-        }
-      },
-      "physics2": {
-        id: "physics2",
-        type: "physics",
-        parent: "course2",
-        config: {
-          particleDensity: 1000,
-          energy: 10000000,
-          temperature: 10000000000,
-          expansion: 2,
-          chaos: 1
-        }
-      },
-      "physics3": {
-        id: "physics3",
-        type: "physics",
-        parent: "course3",
-        config: {
-          particleDensity: 500,
-          energy: 1000000,
-          temperature: 10000,
-          expansion: 0.5,
-          chaos: 0.3
-        }
-      }
-    };
+    <div class="nav-container">
+        <nav class="nav">
+            <div class="nav-content">
+                <div class="logo">SYNCTROPY</div>
+                <div class="nav-links">
+                </div>
+            </div>
+        </nav>
+    </div>
 
-    class UniverseSimulation {
-      constructor(canvasElement) {
-        console.log('UniverseSimulation constructor called');
-        console.log('Canvas Element:', canvasElement);
-        console.log('menu_tji full data:', menu_tji);
+    <div class="content-wrapper">
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    EXPLORATORY<br>
+                    CULINARY<br>
+                    ENTANGLEMENTS
+                </h1>
+                <p class="hero-subtitle">
+                    North American Partner of Proxitron High Temperature Sensors.<br>
+                    Precision monitoring for temperatures up to 2500°C.
+                </p>
+                <a href="#contact" class="cta-button">Initialize Contact</a>
+            </div>
+        </section>
+      <div class="menu-item">
+      <h2>The Nothingness Before Existence</h2>
+      <p><strong>Ingredients:</strong> Honey, Cacao Beans, Butter</p>
+      <p><strong>Execution:</strong> Roasted Tableside</p>
+      <p><strong>Narrative:</strong> Consider... nothing. Not emptiness. Not void. <em>Nothing</em>.</p>
+    </div>
 
-        if (!canvasElement) {
-          console.error('No canvas element found!');
-          return;
-        }
+    <div class="menu-item">
+      <h2>The Big Bang</h2>
+      <p><strong>Ingredients:</strong> Vanilla Bean Pods, Sweet Cream, Liquid Nitrogen, White Chocolate, Fruit Gels</p>
+      <p><strong>Execution:</strong> Open Pods, Scrape Beans, Toast with Pod, Add Cream, Simmer, Remove Pod, Pour Pools, Freeze LN2</p>
+      <p><strong>Narrative:</strong> From an infinitesimal point, the very fabric of space and time erupted forth.</p>
+    </div>
 
-        if (typeof THREE === 'undefined') {
-          console.error('Three.js not loaded!');
-          return;
-        }
-
-        try {
-          this.scene = new THREE.Scene();
-          this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-          this.renderer = new THREE.WebGLRenderer({ 
-            canvas: canvasElement,
-            antialias: true 
-          });
-          this.renderer.setSize(window.innerWidth, window.innerHeight);
-          this.renderer.setClearColor(0x000000);  // Explicitly set background to black
-          
-          console.log('Renderer setup complete');
-          this.setupScene();
-          this.setupMenu();
-        } catch (error) {
-          console.error('Error in UniverseSimulation constructor:', error);
-        }
-      }
-
-      setupScene() {
-        console.log('Setting up scene');
-        // Initial cosmic configuration
-        this.camera.position.z = 5;
-
-        // Ambient lighting
-        const ambientLight = new THREE.AmbientLight(0x404040);
-        this.scene.add(ambientLight);
-
-        // Particle system
-        this.particleGeometry = new THREE.BufferGeometry();
-        const particleCount = 10000;
-        const posArray = new Float32Array(particleCount * 3);
-
-        for (let i = 0; i < particleCount * 3; i++) {
-          posArray[i] = (Math.random() - 0.5) * 100;
-        }
-
-        this.particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        
-        this.particleMaterial = new THREE.PointsMaterial({
-          size: 0.005,
-          color: 0xffffff,
-          transparent: true,
-          opacity: 0.6
-        });
-
-        this.particleSystem = new THREE.Points(this.particleGeometry, this.particleMaterial);
-        this.scene.add(this.particleSystem);
-
-        this.animate();
-      }
-
-      setupMenu() {
-        console.log('Setting up menu');
-        const menuContainer = document.getElementById('cosmic-menu');
-
-        if (!menuContainer) {
-          console.error('No menu container found!');
-          return;
-        }
-
-        // Render courses from menu_tji
-        Object.values(menu_tji)
-          .filter(item => item.type === 'course')
-          .forEach(course => {
-            const courseSection = document.createElement('div');
-            courseSection.className = 'course-section';
-            courseSection.dataset.courseId = course.id;
-
-            courseSection.innerHTML = `
-              <div class="course-details">
-                <h2>${course.name ? course.name.replace(/([A-Z])/g, ' $1').trim() : 'Unnamed Course'}</h2>
-                ${course.items ? `<p>Ingredients: ${course.items}</p>` : ''}
-                ${course.method ? `<p>Technique: ${course.method}</p>` : ''}
-                ${course.steps ? `<p>Technique: ${course.steps}</p>` : ''}
-                ${course.content ? `<p class="narrative">${course.content}</p>` : ''}
-              </div>
-            `;
-
-            menuContainer.appendChild(courseSection);
-          });
-
-        this.setupScrollInteraction();
-      }
-
-      setupScrollInteraction() {
-        const courseSections = document.querySelectorAll('.course-section');
-        
-        window.addEventListener('scroll', () => {
-          const scrollPosition = window.pageYOffset;
-          const windowHeight = window.innerHeight;
-
-          courseSections.forEach((section, index) => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-
-            // Check if section is in view
-            if (
-              scrollPosition + windowHeight/2 >= sectionTop && 
-              scrollPosition < sectionTop + sectionHeight
-            ) {
-              section.classList.add('active');
-
-              // Find corresponding physics config
-              const courseId = section.dataset.courseId;
-              const physicsConfig = Object.values(menu_tji)
-                .find(item => item.id === courseId && item.type === 'physics');
-
-              if (physicsConfig) {
-                // Update universe simulation
-                this.updateSimulation(physicsConfig.config);
-              }
-            } else {
-              section.classList.remove('active');
-            }
-          });
-        });
-      }
-
-      updateSimulation(physicsConfig) {
-        // Update particle system based on physics config
-        const { particleDensity, energy, temperature, expansion, chaos } = physicsConfig;
-
-        // Modify particle system based on config
-        this.particleSystem.material.size = 0.005 + (energy / 1e20) * 0.05;
-        this.particleSystem.material.opacity = 0.2 + (temperature / 1e10);
-        
-        // Simulate expansion
-        this.particleSystem.scale.set(
-          1 + (expansion / 500),
-          1 + (expansion / 500),
-          1 + (expansion / 500)
-        );
-
-        // Add some chaotic movement
-        const positions = this.particleSystem.geometry.attributes.position.array;
-        for (let i = 0; i < positions.length; i++) {
-          positions[i] += (Math.random() - 0.5) * chaos * 0.1;
-        }
-        this.particleSystem.geometry.attributes.position.needsUpdate = true;
-      }
-
-      animate() {
-        requestAnimationFrame(() => this.animate());
-        this.renderer.render(this.scene, this.camera);
-      }
-    }
-
-    // Initialize Universe Simulation on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('DOMContentLoaded fired');
-      const canvasElement = document.getElementById('universe-canvas');
-      
-      if (canvasElement) {
-        console.log('Canvas element found, initializing simulation');
-        const universeSimulation = new UniverseSimulation(canvasElement);
-      } else {
-        console.error('No canvas element found with ID universe-canvas');
-      }
-    });
-
-    // Fallback initialization in case DOMContentLoaded doesn't fire
-    window.addEventListener('load', () => {
-      console.log('Window load event fired');
-      const canvasElement = document.getElementById('universe-canvas');
-      
-      if (canvasElement) {
-        console.log('Canvas element found via window load, initializing simulation');
-        const universeSimulation = new UniverseSimulation(canvasElement);
-      }
-    });
-  </script>
+    <div class="menu-item">
+      <h2>Primordial Soup</h2>
+      <p><strong>Ingredients:</strong> Vegetable Ash, Dashi Stock</p>
+      <p><strong>Execution:</strong> Mortar Pestle Ash, Distribute, Decant Stock</p>
+      <p><strong>Narrative:</strong> Four billion years ago, deep in Earth's oceans, organic compounds formed.</p>
+    </div>
+  </div>
+    </div>
+    <script src="https://conseroinc.github.io/background.js"></script>
 </body>
 </html>
