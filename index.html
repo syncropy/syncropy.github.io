@@ -3,64 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYNCROPY</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra
+    <title>Syncropy Cosmic Menu</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Share+Tech+Mono&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #e5ab17;
+            --dark: #0a0a0a;
+            --light: #ffffff;
+            --accent: #00f6ff;
+        }
 
-+Petch:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://conseroinc.github.io/conseroinc.css">
-    <script 
+        body {
+            margin: 0;
+            background: var(--dark);
+            font-family: 'Share Tech Mono', monospace;
+        }
 
-src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        #three-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            color: var(--light);
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        h1, p {
+            margin: 0 0 20px;
+        }
+    </style>
 </head>
 <body>
     <div id="three-container"></div>
-
-    <div class="nav-container">
-        <nav class="nav">
-            <div class="nav-content">
-                <div class="logo">SYNCROPY(n.): A measure of harmonic convergence. | Exploratory Entanglements</div>
-                <div class="nav-links">
-                </div>
-            </div>
-        </nav>
-    </div>
-
     <div class="content-wrapper">
-        <section class="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    DEVELOPMENT MENU
-                </h1>
-                <p class="hero-subtitle">
-<div class="menu-item">
-      <h2>The Nothingness Before Existence</h2>
-      <p><strong>Ingredients:</strong> Honey, Cacao Beans, Butter</p>
-      <p><strong>Execution:</strong> Roasted Tableside</p>
-      <p><strong>Narrative:</strong> Consider... nothing. Not emptiness. Not void. <em>Nothing</em>.</p>
-    </div>
+        <h1>SYNCROPY:(N.)THE MEASURE OF HARMONY.</h1>
+        <h1>EXPLORATORY CULINARY ENTANGLEMENTS</h1>
+        <h1>DEVELOPMENT MENU</h1>
+        <h2>
+          Course 1 | The Nothingness Before Existence<br><br>
+          Honey, Cacao Beans, Butter<br>
+          Tableside Cast Iron Pan Roast<br>
+          Consider… nothing. Not the absence of light, for there was no light. Not the absence of space, for there was no space to be absent from. Not even the absence of time, for time itself had not yet begun. Before the universe, before existence as we understand it, there was… nothing. Not emptiness. Not void. *Nothing*<br><br>
+          Course 2 | The Big Bang<br><br>
+          Vanilla Bean Pods, SweetCream, LiquidNitrogen, WhiteChocolate, Fruit Gelées<br>
+          Open, Scrape, Toast & Cream Simmer Beans W/ Pod Tableside, Freeze W/ LN2, Place Sphere, Crack W/ Scalded Milk<br>
+          And then… a rupture. Not an explosion *in* space, but an explosion *of* space itself. From an infinitesimal point, the very fabric of space and time erupted forth.<br><br>
+          Course 3 | Primordial Soup<br><br>
+          Vegetable Skin Ash, Dashi Sea Stock<br>
+          Mortar & Pestle Ashed Veggie Trimmings, Distribute, DecantStock<br>
+          4 billion years ago, deep in earth's ocean, a volcanic vent spewed molten carbon into the water in its vicinity, vaporizing some before reacting with the hydrogen and oxygen, and trace molecules of dissolved ammonia to form the first organic compounds.<br><br>
+          Course 4 | Abiogenesis<br><br>
+          Fresh Bread, Olive oil, Vinegar, Herb Purées<br>
+          Guests Layer Liquids, Break Bread<br>
+          Life began with simplicity. In the primordial chaos, microscopic structures formed—enclosures, boundaries, the first spark of order within disorder. Abiogenesis: the birth of life from the lifeless. Just as you form boundaries on your plate, so too did nature create the first cellular forms, separating the inside from the out, laying the foundation for all life to come.<br><br>
+          Course 5 | Photosynthesis<br><br>
+          Vegetables, Butter<br>
+          Tableside Cast Iron Pan Roast<br>
+          Life innovated on a cosmic scale—turning sun into sustenance. Photosynthesis emerged as nature's alchemy, converting light and air into the building blocks of life. These humble ingredients, basking in light and transforming energy, changed our atmosphere forever, gifting the oxygen you breathe.<br><br>
+<!--Course 5 | Cyanogenesis
+Seared Veggies: Carrot, Squash, Zucchini, Onion
+Bright, vibrant vegetables, seared with precision to bring out their natural sweetness. The interplay of colors and flavors mirrors the arrival of photosynthesis, the moment plants began shaping Earth’s atmosphere.
 
-    <div class="menu-item">
-      <h2>The Big Bang</h2>
-      <p><strong>Ingredients:</strong> Vanilla Bean Pods, Sweet Cream, Liquid Nitrogen, White Chocolate, Fruit Gels</p>
-      <p><strong>Execution:</strong> Open Pods, Scrape Beans, Toast with Pod, Add Cream, Simmer, Remove Pod, Pour Pools, Freeze LN2</p>
-      <p><strong>Narrative:</strong> From an infinitesimal point, the very fabric of space and time erupted forth.</p>
-    </div>
+Course 6 | Primordial Soup Redux
+Dashi Stock, Vegetable Skin Ash
+A second take on the primordial soup, this version deepens the story with layers of umami and complexity. Served as a warm consommé poured tableside over vegetable ash, it symbolizes the persistent stirrings of life’s origins.
 
-    <div class="menu-item">
-      <h2>Primordial Soup</h2>
-      <p><strong>Ingredients:</strong> Vegetable Ash, Dashi Stock</p>
-      <p><strong>Execution:</strong> Mortar Pestle Ash, Distribute, Decant Stock</p>
-      <p><strong>Narrative:</strong> Four billion years ago, deep in Earth's oceans, organic compounds formed.</p>
+Course 7 | Artisan Pizza: Dough Balls
+Wood-Fired Dough, Olive Oil Drizzle, Flaked Sea Salt
+The simplest bread, transformed into something transcendent by fire. This course pays homage to the harnessing of fire and the cultivation of grains, a cornerstone of human survival and creativity.
+
+Course 8 | The Collective
+Fried Rice: Jasmine Rice, Soy, Scallions
+An everyday staple elevated to the extraordinary. Each grain of rice is distinct yet part of the whole, reflecting the rise of collective societies. The preparation is tableside, showcasing the sizzle of the wok.
+
+Course 9 | Fungi Revisited
+Mushroom Farfalle: Wild Mushrooms, Cream Sauce, Fresh Herbs
+The versatility of fungi shines again, this time with pasta. Freshly cooked farfalle coated in a delicate mushroom cream sauce highlights the evolution of culinary traditions through the lens of a single ingredient.-->
+        <div class="button-container">
+          <a href="https://www.reddit.com/user/syncropy/" target="_blank">Partake</a>
+        </div>        
+</h2>
+
     </div>
-                </p>
-                <a href="https://www.reddit.com/user/syncropy/" class="cta-button">Initialize Contact</a>
-            </div>
-        </section>
-      
-  </div>
-    </div>
-    <script src="https://conseroinc.github.io/background.js"></script>
+    <script>
+        const container = document.getElementById('three-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Particle System
+        const particleCount = 5000;
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+            // Generate random points on a unit sphere
+            const theta = Math.random() * 2 * Math.PI; // Azimuthal angle
+            const phi = Math.acos(2 * Math.random() - 1); // Polar angle
+            const x = Math.sin(phi) * Math.cos(theta);
+            const y = Math.sin(phi) * Math.sin(theta);
+            const z = Math.cos(phi);
+
+            // Assign positions (all start at the center)
+            positions[i * 3] = 0;
+            positions[i * 3 + 1] = 0;
+            positions[i * 3 + 2] = 0;
+
+            // Assign velocities based on the spherical distribution
+            velocities[i * 3] = x * 0.1; // Scale velocity
+            velocities[i * 3 + 1] = y * 0.1;
+            velocities[i * 3 + 2] = z * 0.1;
+        }
+
+        const particleGeometry = new THREE.BufferGeometry();
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleMaterial = new THREE.PointsMaterial({ size: 0.03, color: 0xffffff });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+
+        camera.position.z = 10;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update particles
+            const posArray = particleGeometry.attributes.position.array;
+            for (let i = 0; i < posArray.length; i++) {
+                posArray[i] += velocities[i] * 0.5; // Move particles outward
+            }
+            particleGeometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
 </body>
 </html>
